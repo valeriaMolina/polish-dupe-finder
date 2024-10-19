@@ -42,8 +42,13 @@ async function fetchAllPolishes(limit, offset) {
  *
  * @param {Object} filters - The filters to use for searching.
  */
-async function search(filters) {
-    const searchResult = await polishModel.findAll({ where: filters });
+async function search(filters, limit, offset) {
+    const searchResult = await polishModel.findAndCountAll({
+        limit,
+        offset,
+        where: filters,
+        include: [{ model: brands, attributes: ['name'] }],
+    });
     return searchResult;
 }
 

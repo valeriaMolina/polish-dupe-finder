@@ -1,38 +1,20 @@
 <template>
   <div class="col">
     <div class="card vw-20 bg-color">
-      <a :href="website">
-        <img :src="logoUrl" class="card-img-top brand-logo-img bg-image" alt="Brand Logo" />
-      </a>
-      <div class="card-body">
-        <h5 class="card-title">{{ brandName }}</h5>
-        <p class="card-text">
-          {{ description }}
-        </p>
-        <div class="row grid gap-0 column-gap-1">
-          <router-link :to="{ name: 'brand', params: { brandId: `${props.brandId}` } }"
-            ><a :href="productsLink" class="col btn btn-primary">Profile</a></router-link
-          >
-          <div class="col">
-            <a :href="addPolishLink" class="btn btn-success"><i class="bi bi-plus-square"></i></a>
-            <a href="" class="btn btn-danger"><i class="bi bi-heart"></i></a>
-          </div>
-        </div>
+      <router-link :to="`/brands/${brandId}`"
+        ><img :src="logoUrl" class="card-img-top brand-logo-img bg-image" alt="Brand Logo"
+      /></router-link>
+      <div class="card-body card-name">
+        <h5 class="card-title title">
+          <router-link class="brand-link" :to="`/brands/${brandId}`">{{ brandName }}</router-link>
+        </h5>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-const props = defineProps([
-  'brandId',
-  'brandName',
-  'logoUrl',
-  'description',
-  'productsLink',
-  'addPolishLink',
-  'website'
-])
+const props = defineProps(['brandId', 'brandName', 'logoUrl'])
 </script>
 
 <style scoped>
@@ -47,5 +29,15 @@ const props = defineProps([
 
 .bg-image {
   background-color: white;
+}
+
+.brand-link {
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+
+.title:hover {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow effect on hover */
 }
 </style>

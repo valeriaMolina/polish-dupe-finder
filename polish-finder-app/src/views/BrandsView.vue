@@ -15,8 +15,6 @@
           :brandId="brand.brand_id"
           :brandName="brand.name"
           :logoUrl="brand.logo_url"
-          :description="brand.description"
-          :website="brand.website"
         ></brandcard>
       </div>
     </div>
@@ -30,6 +28,10 @@ const brands = ref([])
 import brandcard from '../components/BrandCard.vue'
 import { onMounted, ref } from 'vue'
 import { fetchBrands } from '@/apis/brandAPI'
+
+// TODO
+// need to add the filtered list functionality
+// like the one in polishes view
 
 onMounted(async () => {
   const allBrands = await fetchBrands()
