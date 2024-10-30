@@ -1,6 +1,7 @@
-const logger = require('../../../../libraries/logger/logger'); //-
+const logger = require('../../../../libraries/logger/logger');
 const router = require('express').Router();
-const polishService = require('../../service/polish-service'); //-
+const polishService = require('../../service/polish-service');
+const brandService = require('../../../brands/service/brand-service');
 const {
     validateAllPolishesSearch,
     validateSearchByBrand,
@@ -75,6 +76,8 @@ router.get('/by-brand/:brandId', validateSearchByBrand, async (req, res) => {
         const offset = (page - 1) * limit;
         const filterBy = { brand_id: req.params.brandId };
         const polishes = await polishService.search(filterBy, limit, offset);
+        const brand = await brandService.getBrand(req.params.brandId);
+        polishes['brand'] = brand;
         res.json(polishes);
     } catch (error) {
         if (error.statusCode) {

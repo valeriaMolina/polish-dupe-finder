@@ -1,7 +1,7 @@
 <template>
   <div id="brand" class="d-flex flex-column py-5">
     <div class="row py-3">
-      <h1 class="text-center">Brand</h1>
+      <h1 class="text-center">{{ brandName }}</h1>
     </div>
     <div class="row">
       <div class="col-2 ms-2">
@@ -11,7 +11,11 @@
       </div>
       <div class="col">
         <div class="white-bg container border shadow rounded row row-cols-md-6 g-2 px-3 py-3">
+          <div v-if="brandPolishes.length === 0">
+            <h4 class="text-center">No polishes found</h4>
+          </div>
           <div
+            v-else
             v-for="polish in brandPolishes"
             :key="polish.polish_id"
             class="d-flex align-items-stretch"
@@ -46,6 +50,7 @@ let timeout = 1000
 const brandPolishes = ref([])
 const isLoading = ref(false)
 const likedPolishes = ref([])
+const brandName = ref('')
 const route = useRoute()
 
 const authStore = useAuthStore()
@@ -91,6 +96,7 @@ onMounted(async () => {
   const brandId = route.params.brandId
   const getContent = await getPolishesByBrandId(brandId, page, 60)
   brandPolishes.value = getContent.rows
+  brandName.value = getContent.brand.name
 })
 
 onUnmounted(() => {
