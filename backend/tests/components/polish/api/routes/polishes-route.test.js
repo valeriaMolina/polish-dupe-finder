@@ -40,4 +40,18 @@ describe('polishes route', () => {
         const res = await request(app).get('/abc');
         expect(res.status).toBe(400);
     });
+    it('returns an array of polish based on brnad', async () => {
+        polishService.search.mockResolvedValue({});
+        const res = await request(app).get('/by-brand/7?page=1&limit=10');
+        expect(res.status).toBe(200);
+    });
+    it('should return 400 status if query is incorrect', async () => {
+        const res = await request(app).get('/by-brand/7?page=abc&limit=10');
+        expect(res.status).toBe(400);
+    });
+    it('should get an error', async () => {
+        polishService.search.mockRejectedValue(new Error('database error'));
+        const res = await request(app).get('/by-brand/7?page=1&limit=10');
+        expect(res.status).toBe(500);
+    });
 });
