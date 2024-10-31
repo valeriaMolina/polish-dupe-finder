@@ -7,7 +7,6 @@ describe('GET /', () => {
     afterAll(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
-        emailService.close();
     });
     it('responds with "API is running..."', async () => {
         const response = await request(app).get('/');

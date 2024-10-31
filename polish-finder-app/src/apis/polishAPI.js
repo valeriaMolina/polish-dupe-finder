@@ -37,3 +37,22 @@ export async function findOnePolish(polishId) {
     throw new Error(error)
   }
 }
+
+/**
+ * Fetch polishes associated with the given brand id
+ * @param {*} brandId
+ * @param {*} page
+ * @param {*} limit
+ * @returns
+ */
+export async function getPolishesByBrandId(brandId, page, limit) {
+  try {
+    const request = await axios.get(
+      `${SERVER}/polish/by-brand/${brandId}?page=${page}&limit=${limit}`
+    )
+    return request.data
+  } catch (error) {
+    console.error(error)
+    throw new Error('Failed to fetch polishes by brand id')
+  }
+}

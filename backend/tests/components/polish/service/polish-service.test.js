@@ -122,7 +122,9 @@ describe('polishService', () => {
     });
     it('should test searching based on filters', async () => {
         const array = [{ polish_id: 1 }, { polish_id: 2 }, { polish_id: 3 }];
-        sinon.stub(polishModel, 'findAll').returns(Promise.resolve(array));
+        sinon
+            .stub(polishModel, 'findAndCountAll')
+            .returns(Promise.resolve(array));
         const filters = {
             type_id: 1,
         };

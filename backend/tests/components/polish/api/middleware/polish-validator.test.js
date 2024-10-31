@@ -11,7 +11,6 @@ describe('Polish search validator test', () => {
     afterAll(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
-        emailService.close();
     });
 
     it('Should validate a polish search request', async () => {
