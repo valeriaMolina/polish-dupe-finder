@@ -2,8 +2,10 @@ const request = require('supertest');
 const express = require('express');
 const polishesRoute = require('../../../../../src/components/polish/api/routes/polishes-route');
 const polishService = require('../../../../../src/components/polish/service/polish-service');
+const brandService = require('../../../../../src/components/brands/service/brand-service');
 
 jest.mock('../../../../../src/components/polish/service/polish-service');
+jest.mock('../../../../../src/components/brands/service/brand-service');
 
 const app = express();
 app.use('/', polishesRoute);
@@ -40,8 +42,9 @@ describe('polishes route', () => {
         const res = await request(app).get('/abc');
         expect(res.status).toBe(400);
     });
-    it('returns an array of polish based on brnad', async () => {
+    it('returns an array of polish based on brand', async () => {
         polishService.search.mockResolvedValue({});
+        brandService.getBrand.mockResolvedValue({});
         const res = await request(app).get('/by-brand/7?page=1&limit=10');
         expect(res.status).toBe(200);
     });
