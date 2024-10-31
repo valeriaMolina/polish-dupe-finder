@@ -37,10 +37,7 @@ describe('polishes route', () => {
         expect(res.status).toBe(200);
     });
     it('returns an error if the query string is incorrect', async () => {
-        polishService.findOnePolish.mockRejectedValue(
-            new Error('Database error')
-        );
         const res = await request(app).get('/abc');
-        expect(res.status).toBe(500);
+        expect(res.status).toBe(400);
     });
 });
