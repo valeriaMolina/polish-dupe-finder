@@ -77,6 +77,9 @@
         </div>
       </div>
     </div>
+    <div>
+      <DupesWindow :duplicates="polish.dupes"></DupesWindow>
+    </div>
   </div>
 </template>
 
@@ -84,6 +87,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { findOnePolish } from '@/apis/polishAPI'
+import DupesWindow from '@/components/DupesWindow.vue'
 
 const route = useRoute()
 const router = useRouter()
