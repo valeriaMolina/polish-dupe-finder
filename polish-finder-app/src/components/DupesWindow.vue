@@ -11,7 +11,12 @@
 </template>
 
 <script setup>
-defineProps(['duplicates'])
+const props = defineProps({
+  duplicates: {
+    type: Array,
+    required: true
+  }
+})
 </script>
 
 <style>
