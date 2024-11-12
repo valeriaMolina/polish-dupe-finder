@@ -14,11 +14,12 @@ export async function submitDupe(firstPolishId, secondPolishId) {
       method: 'post',
       withCredentials: true
     })
-    const response = await dupeRequest.post(
-      `/submit/dupe?polishId=${firstPolishId}&dupeId=${secondPolishId}`
-    )
+    const response = await dupeRequest.post(`/submit/dupe`, {
+      polishId: firstPolishId,
+      dupeId: secondPolishId
+    })
     return response.data
   } catch (error) {
-    throw new Error('Error creating dupe submission: ' + error.message)
+    throw error
   }
 }

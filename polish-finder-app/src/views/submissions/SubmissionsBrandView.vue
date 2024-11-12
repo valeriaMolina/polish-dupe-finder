@@ -1,6 +1,6 @@
 <template>
   <div id="main-div-brand-submit" class="d-flex flex-column align-items-center px-3 py-5">
-    <Modal ref="thisModal"></Modal>
+    <NotLoggedInModal ref="thisModal"></NotLoggedInModal>
     <div class="pt-2">
       <form
         id="form-register"
@@ -65,7 +65,7 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import Modal from '@/components/Modal.vue'
+import NotLoggedInModal from '@/components/modals/NotLoggedInModal.vue'
 
 onMounted(() => {
   // check if there is a user logged in

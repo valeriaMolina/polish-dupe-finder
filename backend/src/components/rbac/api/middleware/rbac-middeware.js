@@ -12,8 +12,9 @@ const logger = require('../../../../libraries/logger/logger');
 // authenticate the bearer token
 const authenticateToken = (req, res, next) => {
     logger.info(`Authenticating token`);
+    const accessToken = req.cookies.accessToken;
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = (authHeader && authHeader.split(' ')[1]) || accessToken;
     if (!token) {
         return res.status(401).json({ error: 'No token provided' });
     }

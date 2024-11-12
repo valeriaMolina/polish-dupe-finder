@@ -2,7 +2,7 @@
  * @author Valeria Molina Recinos
  */
 
-const { check, query, validationResult } = require('express-validator');
+const { check, query, validationResult, body } = require('express-validator');
 const brandService = require('../../../brands/service/brand-service');
 const typeService = require('../../../polish/service/type-service');
 const colorService = require('../../../polish/service/color-service');
@@ -48,8 +48,8 @@ exports.validateBrandSubmission = [
  * Middleware function to validate the dupe submission data.
  */
 exports.validateDupeSubmission = [
-    query('polishId', 'Polish ID is required').isNumeric().not().isEmpty(),
-    query('dupeId', 'DupeID is required').isNumeric().not().isEmpty(),
+    body('polishId', 'Polish ID is required').isNumeric().not().isEmpty(),
+    body('dupeId', 'DupeID is required').isNumeric().not().isEmpty(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

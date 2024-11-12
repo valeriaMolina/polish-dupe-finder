@@ -1,5 +1,8 @@
 <template>
   <div id="gradient-bg" class="d-flex flex-column align-items-center px-3 py-5">
+    <LoginReminderModal ref="thisModal"></LoginReminderModal>
+    <SubmissionSuccessModal ref="successModal"></SubmissionSuccessModal>
+    <ErrorModal ref="errorModal"></ErrorModal>
     <div class="header-area">
       <h1>Submit a dupe</h1>
     </div>
@@ -73,9 +76,15 @@
               @remove-selection-click="removeSecondPolishSelection"
             ></Selection>
           </div>
-          <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-            <button type="submit" class="btn btn-primary" :disabled="isSubmitDisabled">
-              Submit Dupe
+          <div class="d-flex justify-content-center mb-3 mx-2">
+            <button
+              id="button-submit"
+              type="submit"
+              class="btn mb-3 w-50"
+              :disabled="isSubmitDisabled"
+            >
+              <span class="spinner-border spinner-border-sm" :hidden="!loading"></span>
+              <span :hidden="loading">Submit Dupe</span>
             </button>
           </div>
         </form>
@@ -91,24 +100,63 @@ import Selection from '@/components/Selection.vue'
 import { fetchBrands } from '@/apis/brandAPI'
 import { getPolishesByBrandId } from '@/apis/polishAPI'
 import { submitDupe } from '@/apis/submissionsAPI'
+import LoginReminderModal from '@/components/modals/NotLoggedInModal.vue'
+import SubmissionSuccessModal from '@/components/modals/SubmissionSuccessModal.vue'
+import ErrorModal from '@/components/modals/ErrorModal.vue'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const brands = ref([])
 // first polish
 const firstBrand = ref(null)
 const firstBrandPolishes = ref([])
 const firstPolish = ref(null)
 // second polish
+const loading = ref(false)
 const secondBrand = ref(null)
 const secondBrandPolishes = ref([])
 const secondPolish = ref(null)
 
+let thisModal = ref(null)
+let successModal = ref(null)
+let errorModal = ref(null)
+
+function showModal() {
+  thisModal.value.show()
+}
+
+function displaySuccessModal() {
+  successModal.value.show()
+}
+
+function displayErrorModal() {
+  errorModal.value.show()
+}
+
 const isSubmitDisabled = computed(() => {
-  return !firstPolish.value || !secondPolish.value
+  return !firstPolish.value || !secondPolish.value || !authStore.getIsLoggedIn || loading.value
 })
 
 const submit = async () => {
-  const res = await submitDupe(firstPolish.polish_id, secondPolish.polish_id)
-  console.log(res)
+  // triple check there is a user logged in
+  if (authStore.getIsLoggedIn) {
+    try {
+      loading.value = true
+      const res = await submitDupe(firstPolish.value.polish_id, secondPolish.value.polish_id)
+      // display success modal
+      displaySuccessModal()
+      loading.value = false
+      // reset the form fields
+      firstBrand.value = null
+      firstPolish.value = null
+      secondBrand.value = null
+      secondPolish.value = null
+    } catch (error) {
+      loading.value = false
+      console.error(error)
+      displayErrorModal()
+    }
+  }
 }
 
 const selectFirstBrandName = async (brand) => {
@@ -154,12 +202,18 @@ const selectSecondPolish = (polish) => {
 }
 
 onMounted(async () => {
-  const fetchedBrands = await fetchBrands()
-  brands.value = fetchedBrands
+  // a user must be logged in
+  if (!authStore.getIsLoggedIn) {
+    showModal()
+  } else {
+    // fetch all brands from the API and populate the brands array
+    const fetchedBrands = await fetchBrands()
+    brands.value = fetchedBrands
+  }
 })
 </script>
 
-<style>
+<style scoped>
 #gradient-bg {
   background: radial-gradient(circle at 11.4% 50%, rgb(255, 37, 174) 0%, rgb(250, 237, 56) 90%);
 }
@@ -167,5 +221,22 @@ onMounted(async () => {
 .white-bg {
   background-color: #ececec;
   color: black;
+}
+
+#button-submit {
+  color: #212529;
+  border-color: #212529;
+  padding: 0.25em 0.75em;
+  background: #ecbce7;
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 2px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+
+#button-submit:hover {
+  background: #e69cd4;
 }
 </style>
