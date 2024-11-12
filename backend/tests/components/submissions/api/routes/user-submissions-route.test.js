@@ -40,6 +40,7 @@ jest.mock(
 );
 
 const app = express();
+app.use(express.json());
 app.use('/', userSubmissionRoute);
 
 describe('User submissions route', () => {
@@ -49,8 +50,9 @@ describe('User submissions route', () => {
     });
     it('Should handle call to submit a dupe', async () => {
         submissionService.submitDupe.mockResolvedValue({ submission_id: 5 });
-        const res = await request(app).post('/dupe?polishId=4&dupeId=8').send({
-            username: 'testUser',
+        const res = await request(app).post('/dupe').send({
+            polishId: 3,
+            dupeId: 5,
         });
         expect(res.status).toBe(201);
     });
