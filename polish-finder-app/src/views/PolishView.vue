@@ -8,7 +8,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="row row-cols-2">
+      <div v-else class="row row-cols">
         <div class="col d-flex align-items-center">
           <img
             v-if="polish.image_url"
@@ -23,7 +23,12 @@
         </div>
         <div class="col">
           <div>
-            <h2>{{ polish.name }}</h2>
+            <h2>
+              {{ polish.name }}
+              <button class="like-button" @click.prevent="handleLike">
+                <i id="heartIcon" :class="iconClass"></i>
+              </button>
+            </h2>
             <p>{{ polish.brand.name }}</p>
             <hr />
             <div v-if="polish.description">
@@ -77,18 +82,27 @@
         </div>
       </div>
     </div>
+    <div>
+      <DupesWindow :duplicates="polish.dupes"></DupesWindow>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { findOnePolish } from '@/apis/polishAPI'
+import DupesWindow from '@/components/DupesWindow.vue'
+import { useAuthStore } from '@/stores/auth'
+import { getUserLikes, likePolish, removeLike } from '@/apis/likesAPI'
 
 const route = useRoute()
 const router = useRouter()
 const polish = ref({})
 const isLoading = ref(true)
+const likedPolishes = ref([])
+const authStore = useAuthStore()
+const isLiked = ref(false)
 
 onMounted(async () => {
   const fetchedPolish = await findOnePolish(route.params.polishId)
@@ -99,13 +113,45 @@ onMounted(async () => {
     // redirect to not found
     router.push({ name: 'not-found' })
   }
+  // check if user is logged in and has liked the polish
+  if (authStore.getIsLoggedIn) {
+    const likes = await getUserLikes(authStore.getEmail)
+    likedPolishes.value = likes.map((like) => like.polish_id)
+  }
+  likedPolishes.value.includes(polish.value.polish_id)
+    ? (isLiked.value = true)
+    : (isLiked.value = false)
+})
+
+const iconClass = computed(() => {
+  return isLiked.value ? 'bi bi-heart-fill' : 'bi bi-heart'
 })
 
 onUnmounted(() => {
   // cleanup resources here (e.g., cancel API requests)
   isLoading.value = true
   polish.value = {}
+  likedPolishes.value = []
 })
+
+const handleLike = async () => {
+  if (authStore.getIsLoggedIn) {
+    // send like request to server
+    const email = authStore.getEmail
+    if (isLiked.value) {
+      // undo the like
+      await removeLike(email, polish.value.polish_id)
+      isLiked.value = false
+    } else {
+      // like the polish
+      await likePolish(email, polish.value.polish_id)
+      isLiked.value = true
+    }
+  } else {
+    // redirect to login page
+    router.push('/login')
+  }
+}
 </script>
 
 <style scoped>
@@ -128,5 +174,15 @@ onUnmounted(() => {
 .large-text {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+}
+
+.like-button {
+  border: none;
+  background: none;
+}
+
+#heartIcon {
+  font-size: 20px;
+  color: #f00;
 }
 </style>

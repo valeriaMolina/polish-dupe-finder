@@ -45,6 +45,7 @@ describe('Authenticate token test', () => {
             headers: {
                 authorization: `Bearer ${validToken}`,
             },
+            cookies: {},
         };
 
         await authenticateToken(req, res, next);
@@ -55,6 +56,7 @@ describe('Authenticate token test', () => {
         const req = {
             body: {},
             headers: {},
+            cookies: {},
         };
 
         await authenticateToken(req, res, next);
@@ -70,6 +72,7 @@ describe('Authenticate token test', () => {
             headers: {
                 authorization: 'Bearer invalidToken',
             },
+            cookies: {},
         };
         await authenticateToken(req, res, next);
         expect(res.status).toHaveBeenCalledWith(403);

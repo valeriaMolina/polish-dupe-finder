@@ -44,6 +44,7 @@ export async function findOnePolish(polishId) {
  * @param {*} page
  * @param {*} limit
  * @returns
+ * todo: make page and limit optional to just return all the polishes associated with this brand
  */
 export async function getPolishesByBrandId(brandId, page, limit) {
   try {

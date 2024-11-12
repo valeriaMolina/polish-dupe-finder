@@ -35,9 +35,6 @@
               <li>
                 <router-link class="dropdown-item" to="/polishes">Polishes</router-link>
               </li>
-              <li>
-                <router-link class="dropdown-item" to="/search/dupes">Dupes</router-link>
-              </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -56,11 +53,19 @@
               </li>
               <li>
                 <router-link class="dropdown-item" to="/contribute/new/polish"
-                  >Add polishes</router-link
+                  >Submit a polish</router-link
+                >
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/contribute/new/dupe"
+                  >Submit a dupe</router-link
                 >
               </li>
               <li>
                 <router-link class="dropdown-item" to="/">Submit feedback</router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/">Report a bug</router-link>
               </li>
             </ul>
           </li>

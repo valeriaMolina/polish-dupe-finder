@@ -58,10 +58,20 @@ function redirectToRegister() {
           </p>
         </div>
         <div class="modal-footer">
-          <button data-bs-dismiss="modal" id="register" @click.prevent="redirectToRegister">
+          <button
+            data-bs-dismiss="modal"
+            class="rounded"
+            id="register"
+            @click.prevent="redirectToRegister"
+          >
             Register
           </button>
-          <button data-bs-dismiss="modal" id="login" @click.prevent="redirectToLogin">
+          <button
+            data-bs-dismiss="modal"
+            class="rounded"
+            id="login"
+            @click.prevent="redirectToLogin"
+          >
             Sign In
           </button>
         </div>

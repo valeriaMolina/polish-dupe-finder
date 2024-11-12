@@ -83,6 +83,12 @@ const router = createRouter({
       component: () => import('../views/submissions/SubmissionsPolishView.vue')
     },
     {
+      path: '/contribute/new/dupe',
+      name: 'contribute-dupe',
+      component: () => import('../views/submissions/SubmissionDupeView.vue')
+      // todo: add authentication
+    },
+    {
       path: '/account',
       name: 'user-profile',
       component: () => import('../views/UserProfileView.vue'),

@@ -374,7 +374,7 @@ watch(
 )
 </script>
 
-<style scoped>
+<style>
 #main-register-div {
   background: linear-gradient(90deg, #b566e9 0%, #adf499 50%, #fcb045 100%);
 }
