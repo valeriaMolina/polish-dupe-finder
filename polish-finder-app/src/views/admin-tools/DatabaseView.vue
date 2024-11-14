@@ -9,10 +9,38 @@
           Here you can view and manage the database entries. You can add, edit, and delete entries.
         </p>
       </div>
-      <div>
-        <ul class="list-group" v-for="polish in polishes" :key="polish.polish_id">
-          <DbEntry :itemName="polish.name" :brandName="polish.brand.name"></DbEntry>
-        </ul>
+      <div class="row">
+        <form class="d-flex col rounded-pill" role="search">
+          <input type="search" class="form-control me-2" placeholder="Search" aria-label="Search" />
+        </form>
+        <button class="btn btn-secondary rounded-pill col-md-auto">
+          Sort <i class="bi bi-caret-down-fill"></i>
+        </button>
+        <button class="btn btn-success rounded-pill col-md-auto">
+          New <i class="bi bi-caret-down-fill"></i>
+        </button>
+      </div>
+      <div class="my-2">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Primary Color</th>
+              <th scope="col">Type</th>
+            </tr>
+          </thead>
+          <tbody v-for="polish in polishes" :key="polish.polish_id">
+            <DbEntry
+              :itemName="polish.name"
+              :brandName="polish.brand.name"
+              :polishId="polish.polish_id"
+              :primaryColor="polish.color.name"
+              :type="polish.type.name"
+            ></DbEntry>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
