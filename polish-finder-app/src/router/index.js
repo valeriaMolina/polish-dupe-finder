@@ -201,6 +201,66 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/admin',
+      name: 'admin-homepage',
+      component: () => import('@/views/admin-tools/AdminHomePage.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
+    {
+      path: '/admin/db',
+      name: 'admin-db',
+      component: () => import('@/views/admin-tools/DatabaseView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
+    {
+      path: '/admin/roles',
+      name: 'admin-roles',
+      component: () => import('@/views/admin-tools/RoleAssignments.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
+    {
+      path: '/admin/submissions',
+      name: 'admin-submissions',
+      component: () => import('@/views/admin-tools/SubmissionsView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
+    {
+      path: '/admin/feedback',
+      name: 'admin-feedback',
+      component: () => import('@/views/admin-tools/UserFeedback.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
     // catch all fallback route
     {
       path: '/:pathMatch(.*)*',
