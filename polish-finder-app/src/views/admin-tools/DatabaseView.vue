@@ -10,9 +10,16 @@
         </p>
       </div>
       <div class="row">
-        <form class="d-flex col rounded-pill" role="search">
-          <input type="search" class="form-control me-2" placeholder="Search" aria-label="Search" />
-        </form>
+        <button
+          class="btn btn-primary rounded-pill col-md-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsedSearch"
+          aria-expanded="false"
+          aria-controls="collapsedSearch"
+        >
+          Search
+        </button>
         <button class="btn btn-secondary rounded-pill col-md-auto">
           Sort <i class="bi bi-caret-down-fill"></i>
         </button>
@@ -20,9 +27,10 @@
           New <i class="bi bi-caret-down-fill"></i>
         </button>
       </div>
+      <div class="collapse" id="collapsedSearch"><DbSearch></DbSearch></div>
       <div class="my-2">
         <table class="table">
-          <thead>
+          <thead id="tabletop">
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Name</th>
@@ -49,6 +57,7 @@
 <script setup>
 import AdminNav from '@/components/AdminNav.vue'
 import DbEntry from '@/components/DbEntry.vue'
+import DbSearch from '@/components/DbSearch.vue'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { fetchPolish } from '@/apis/polishAPI'
 
@@ -64,3 +73,5 @@ onMounted(async () => {
 
 // get all db entries
 </script>
+
+<style scoped></style>
