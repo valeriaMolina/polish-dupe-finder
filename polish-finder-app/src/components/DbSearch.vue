@@ -1,23 +1,51 @@
 <template>
-  <div class="my-4">
-    <form action="" class="row g-3 border rounded" id="form">
-      <div class="col-md-6">
-        <label for="nameInput" class="form-label">Name</label>
-        <input id="nameInput" class="form-control" type="text" />
+  <div class="db-search">
+    <form action="" class="container-fluid">
+      <div v-for="(filter, index) in filters" :key="index">
+        <div class="row">
+          <DbFilter class="col"></DbFilter>
+          <button
+            class="col-md-auto mt-4 btn btn-danger"
+            @click.prevent="removeFilter(index)"
+            :hidden="isHidden"
+          >
+            <i class="bi bi-x-circle"></i>
+          </button>
+        </div>
       </div>
-      <div class="col-md-6">
-        <label for="brandInput" class="form-label">Brand</label>
-        <input id="brandInput" class="form-control" type="text" />
+      <div class="nice-form-group">
+        <button
+          class="btn btn-primary rounded-pill align-items-end mt-4"
+          @click.prevent="addFilter()"
+        >
+          Add filter
+        </button>
+        <button class="btn btn-success rounded-pill mt-4">Search</button>
       </div>
-      <div class="col-md-2"></div>
     </form>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import DbFilter from './DbFilter.vue'
+import { ref, computed } from 'vue'
 
-<style scoped>
-#form {
-  background-color: #e4eaee;
+// initialize filters array
+const filters = ref([{ id: 1 }])
+
+const addFilter = () => {
+  filters.value.push({ id: filters.value.length } + 1)
 }
-</style>
+const removeFilter = (index) => {
+  filters.value.splice(index, 1)
+}
+
+const isHidden = computed(() => {
+  if (filters.value.length === 1) {
+    return true
+  }
+  return false
+})
+
+const isSubmitDisabled = computed(() => {})
+</script>
