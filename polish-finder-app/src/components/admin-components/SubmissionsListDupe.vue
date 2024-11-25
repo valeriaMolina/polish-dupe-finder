@@ -9,6 +9,7 @@
           <th scope="col">Submitted By</th>
           <th scope="col">Status</th>
           <th scope="col">Created At</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody v-for="submission in props.submissions" :key="submission.submission_id">
@@ -19,6 +20,8 @@
           :user="submission.user.username"
           :status="submission.status"
           :createdAt="submission.created_at"
+          :polishId="submission.polish_id"
+          :dupeId="submission.similar_to_polish_id"
         ></DupeEntry>
       </tbody>
     </table>
