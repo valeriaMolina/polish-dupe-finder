@@ -23,3 +23,17 @@ export async function submitDupe(firstPolishId, secondPolishId) {
     throw error
   }
 }
+
+export async function getDupeSubmissions() {
+  try {
+    const getDupes = axios.create({
+      baseURL: SERVER,
+      method: 'get',
+      withCredentials: true
+    })
+    const response = await getDupes.get('/submissions/dupes')
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

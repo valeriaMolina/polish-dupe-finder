@@ -27,9 +27,9 @@
 </template>
 
 <script setup>
-import AdminNav from '@/components/AdminNav.vue'
-import DbSearch from '@/components/DbSearch.vue'
-import DbList from '@/components/DbList.vue'
+import AdminNav from '@/components/admin-components/AdminNav.vue'
+import DbSearch from '@/components/admin-components/DbSearch.vue'
+import DbList from '@/components/admin-components/DbList.vue'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { fetchPolish } from '@/apis/polishAPI'
 

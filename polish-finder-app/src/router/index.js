@@ -238,9 +238,33 @@ const router = createRouter({
       }
     },
     {
-      path: '/admin/submissions',
-      name: 'admin-submissions',
-      component: () => import('@/views/admin-tools/SubmissionsView.vue'),
+      path: '/admin/submissions/brands',
+      name: 'admin-submissions-brands',
+      component: () => import('@/views/admin-tools/BrandSubmissionsView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
+    {
+      path: '/admin/submissions/dupes',
+      name: 'admin-submissions-dupes',
+      component: () => import('@/views/admin-tools/DupeSubmissionsView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'home' }
+        }
+      }
+    },
+    {
+      path: '/admin/submissions/polish',
+      name: 'admin-submissions-polish',
+      component: () => import('@/views/admin-tools/PolishSubmissionsView.vue'),
       beforeEnter: () => {
         if (isAuthenticated()) {
           return true

@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import AdminNav from '@/components/AdminNav.vue'
+import AdminNav from '@/components/admin-components/AdminNav.vue'
 </script>

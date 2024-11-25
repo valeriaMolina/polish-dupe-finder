@@ -41,5 +41,5 @@ const isDisabled = computed(() => {
 </script>
 
 <style scoped>
-@import url('../../node_modules/nice-forms.css/dist/nice-forms.css');
+@import url('../../../node_modules/nice-forms.css/dist/nice-forms.css');
 </style>

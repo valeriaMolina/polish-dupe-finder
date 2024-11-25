@@ -13,8 +13,27 @@
       <li class="nav-item">
         <router-link id="roles" class="nav-link" to="/admin/roles">Role Assignments</router-link>
       </li>
-      <li class="nav-item">
-        <router-link id="subs" class="nav-link" to="/admin/submissions">Submissions</router-link>
+      <li class="nav-item dropdown">
+        <a
+          href="#"
+          class="nav-link dropdown-toggle"
+          id="submissions"
+          data-bs-toggle="dropdown"
+          role="button"
+          aria-expanded="false"
+          >Submissions</a
+        >
+        <ul class="dropdown-menu">
+          <li>
+            <router-link class="dropdown-item" to="/admin/submissions/brands">Brands</router-link>
+          </li>
+          <li>
+            <router-link class="dropdown-item" to="/admin/submissions/dupes">Dupes</router-link>
+          </li>
+          <li>
+            <router-link class="dropdown-item" to="/admin/submissions/polish">Polish</router-link>
+          </li>
+        </ul>
       </li>
       <li class="nav-items">
         <router-link id="feedback" class="nav-link" to="/admin/feedback">User feedback</router-link>

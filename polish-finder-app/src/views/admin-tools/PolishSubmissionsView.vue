@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <AdminNav activeLink="roles"></AdminNav>
+  <div class="container-fluid">
+    <AdminNav activeLink="submissions"></AdminNav>
+    <h4>Polish Submissions</h4>
   </div>
 </template>
 

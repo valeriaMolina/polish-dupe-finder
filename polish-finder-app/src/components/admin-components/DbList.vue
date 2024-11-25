@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import DbEntry from '@/components/DbEntry.vue'
+import DbEntry from '@/components/admin-components/DbEntry.vue'
 const props = defineProps({
   polishes: {
     type: Array,
