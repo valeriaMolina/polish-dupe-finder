@@ -22,6 +22,7 @@
                     :createdAt="submission.created_at"
                     :polishId="submission.polish_id"
                     :dupeId="submission.similar_to_polish_id"
+                    @updated-submission="updateSubmissionsList()"
                 ></DupeEntry>
             </tbody>
         </table>
@@ -30,6 +31,12 @@
 
 <script setup>
 import DupeEntry from './DupeEntry.vue';
+
+const emit = defineEmits(['update-list']);
+
+const updateSubmissionsList = () => {
+    emit('update-list');
+};
 
 const props = defineProps({
     submissions: {

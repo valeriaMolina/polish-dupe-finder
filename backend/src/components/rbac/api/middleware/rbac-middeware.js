@@ -16,7 +16,9 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = (authHeader && authHeader.split(' ')[1]) || accessToken;
     if (!token) {
-        return res.status(401).json({ error: 'No token provided' });
+        return res
+            .status(401)
+            .json({ error: 'No token provided', name: 'MissingTokenError' });
     }
     try {
         const user = jwt.verify(token, config.jwtSecret);

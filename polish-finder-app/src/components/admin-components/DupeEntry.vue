@@ -8,8 +8,8 @@
                 :to="`/polishes/${props.polishId}`"
                 target="_blank"
                 rel="noopener noreferrer"
-                >{{ polish }}</router-link
-            >
+                >{{ polish }}
+            </router-link>
         </td>
         <td>
             <router-link
@@ -24,6 +24,7 @@
         <td>{{ createdAt }}</td>
         <td>
             <button
+                :disabled="!isSubmissionReviewed"
                 type="button"
                 class="btn btn-primary btn-sm dropdown-toggle"
                 data-bs-toggle="dropdown"
@@ -32,14 +33,25 @@
                 Review
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Accept</a></li>
-                <li><a class="dropdown-item" href="#">Reject</a></li>
+                <li>
+                    <a class="dropdown-item" @click.prevent="updateSubmission('approved')"
+                        >Accept</a
+                    >
+                </li>
+                <li>
+                    <a class="dropdown-item" @click.prevent="updateSubmission('rejected')"
+                        >Reject</a
+                    >
+                </li>
             </ul>
         </td>
     </tr>
 </template>
 
 <script setup>
+import { reviewDupe } from '@/apis/reviewsAPI';
+import { ref } from 'vue';
+
 const props = defineProps({
     submissionId: {
         type: Number,
@@ -74,4 +86,20 @@ const props = defineProps({
         required: true,
     },
 });
+const emit = defineEmits(['updated-submission']);
+
+const updateSubmission = async (status) => {
+    try {
+        const id = props.submissionId;
+        const res = await reviewDupe(id, status);
+        if (res) {
+            // emit a notification
+            emit('updated-submission');
+        }
+    } catch (error) {
+        console.error('Error updating submission:', error);
+    }
+};
+
+const isSubmissionReviewed = ref(props.status === 'pending' ? true : false);
 </script>
