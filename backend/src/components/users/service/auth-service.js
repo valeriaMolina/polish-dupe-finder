@@ -23,6 +23,19 @@ const {
     JsonWebTokenVerifyError,
 } = require('../../../libraries/utils/error-handler');
 
+async function invalidateRefreshToken(refreshToken) {
+    // find user by refresh token
+    const user = await userService.getUserByRefreshToken(refreshToken);
+
+    if (!user) {
+        logger.error(`Invalid refresh token`);
+        throw new UserNotFoundError('Invalid refresh token');
+    }
+
+    // remove refresh token from database
+    await userService.removeRefreshToken(user.user_id);
+}
+
 /**
  * Logs out a user by invalidating their refresh token.
  *
@@ -397,6 +410,38 @@ async function resetUserPassword(jwtToken, newPassword) {
     }
 }
 
+async function refreshTokens(refreshToken) {
+    try {
+        const decoded = jwt.verify(refreshToken, config.refreshTokenSecret);
+        const userId = decoded.user.id;
+        if (!userId) {
+            throw new UserNotFoundError('User not found');
+        }
+
+        // invalidate the old refresh token
+        await invalidateRefreshToken(refreshToken);
+
+        // generate new tokens
+        const payload = {
+            user: {
+                id: user.user_id,
+            },
+        };
+        const newAccessToken = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '24h',
+        });
+        const newRefreshToken = jwt.sign(payload, config.refreshTokenSecret, {
+            expiresIn: '7d',
+        });
+        // save the new refresh token
+        await userService.saveRefreshToken(userId, newRefreshToken);
+
+        return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    } catch (error) {
+        throw new InvalidTokenError('Invalid refresh token');
+    }
+}
+
 module.exports = {
     logInUser,
     logOutUser,
@@ -406,4 +451,5 @@ module.exports = {
     passwordReset,
     verifyResetPasswordToken,
     resetUserPassword,
+    refreshTokens,
 };
