@@ -23,8 +23,22 @@ const authenticateToken = (req, res, next) => {
         req.body.user = user;
         next();
     } catch (err) {
-        logger.error(`Error verifying token: ${err.message}`);
-        return res.status(403).json({ error: 'Forbidden: Invalid token' });
+        if (err.name === 'TokenExpiredError') {
+            logger.error(`Token Expired: ${err.message}`);
+            return res
+                .status(401)
+                .json({ error: 'TokenExpired', name: 'TokenExpiredError' });
+        } else if (err.name === 'JsonWebTokenError') {
+            logger.error(`Invalid token: ${err.message}`);
+            return res
+                .status(403)
+                .json({ error: 'Invalid token', name: 'JsonWebTokenError' });
+        } else {
+            logger.error(`Error authenticating token: ${err.message}`);
+            return res
+                .status(403)
+                .json({ error: 'Invalid token', name: 'Forbidden' });
+        }
     }
 };
 function authorize(permissionName) {

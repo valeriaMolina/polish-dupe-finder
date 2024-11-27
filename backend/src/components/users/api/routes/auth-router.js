@@ -20,6 +20,9 @@ const userService = require('../../service/user-service');
 const authService = require('../../service/auth-service');
 const config = require('../../../../libraries/config/config');
 const emailService = require('../../service/email-service');
+const {
+    authenticateToken,
+} = require('../../../rbac/api/middleware/rbac-middeware');
 
 /**
  * This function authenticates a user.
@@ -170,6 +173,23 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     } catch (error) {
         if (error.statusCode) {
             logger.error(`Error refreshing token: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
+    }
+});
+
+router.get('/is-logged-in', authenticateToken, (_, res) => {
+    try {
+        res.status(200).send();
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(
+                `Error checking if user is logged in: ${error.message}`
+            );
             return res.status(error.statusCode).send({ error: error.message });
         } else {
             // error was not anticipated
