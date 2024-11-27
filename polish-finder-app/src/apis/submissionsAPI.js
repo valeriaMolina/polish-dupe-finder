@@ -3,9 +3,6 @@
  */
 
 import axiosInstance from '@/utils/axios';
-import config from '@/config';
-
-const SERVER = config.SERVER;
 
 /**
  * This is a protected endpoint
@@ -15,12 +12,34 @@ const SERVER = config.SERVER;
  */
 export async function submitDupe(firstPolishId, secondPolishId) {
     try {
-        const response = await axiosInstancet.post(`/submit/dupe`, {
+        const response = await axiosInstance.post(`/submit/dupe`, {
             polishId: firstPolishId,
             dupeId: secondPolishId,
         });
         return response.data;
     } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * this is a protected endpoint
+ * @param {String} brandName
+ * @param {String} brandUrl
+ * @returns
+ */
+export async function submitBrand(brandName, brandUrl) {
+    const body = {
+        brandName,
+    };
+    if (brandUrl) {
+        body.brandUrl = brandUrl;
+    }
+    try {
+        const response = await axiosInstance.post(`/submit/brand`, body);
+        return response.data;
+    } catch (error) {
+        console.error(error);
         throw error;
     }
 }

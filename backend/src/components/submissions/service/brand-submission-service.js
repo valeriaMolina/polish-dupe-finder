@@ -12,9 +12,7 @@ async function brandSubmissionExists(brandName) {
 }
 
 async function insertBrandSubmission(submission) {
-    const newSubmission = await brandSubmissionModel.create({
-        submission,
-    });
+    const newSubmission = await brandSubmissionModel.create(submission);
     return newSubmission;
 }
 

@@ -30,6 +30,9 @@ const brandSubmissions = db.define(
                 key: 'user_id',
             },
         },
+        website: {
+            type: Sequelize.TEXT,
+        },
     },
     {
         timestamps: false,

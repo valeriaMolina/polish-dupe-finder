@@ -35,10 +35,12 @@ exports.validatePolishSubmission = [
  * Middleware function to validate the brand submission data.
  */
 exports.validateBrandSubmission = [
-    check('brandName', 'Brand name is required').not().isEmpty().isString(),
+    body('brandName', 'Brand name is required').not().isEmpty().isString(),
+    body('brandUrl').notEmpty().isURL(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            logger.error(errors.array());
             return res.status(400).json({ errors: errors.array() });
         }
         next();

@@ -179,21 +179,21 @@ async function submitPolish(data) {
  * @returns {Promise<Object>} A promise that resolves to the newly created brand submission object.
  */
 async function submitBrand(data) {
-    const { name } = data;
+    const { brandName, brandUrl } = data;
     const user = data.user;
     const id = user.user.id;
     // check if the brand already exists
     try {
-        const brandExists = await brandService.findBrandNameInTable(name);
+        const brandExists = await brandService.findBrandNameInTable(brandName);
         if (brandExists) {
-            logger.error(`Brand ${name} already exists in our records`);
+            logger.error(`Brand ${brandName} already exists in our records`);
             throw new BrandAlreadyExistsError(
-                `Brand ${name} already exists in our records`
+                `Brand ${brandName} already exists in our records`
             );
         }
         // check if there is already a submission for this brand
         const submissionExistsAlready =
-            await brandSubmissionService.brandSubmissionExists(name);
+            await brandSubmissionService.brandSubmissionExists(brandName);
         if (submissionExistsAlready) {
             logger.error(`There is already a submission for this brand`);
             if (submissionExistsAlready.user_id === id) {
@@ -215,7 +215,8 @@ async function submitBrand(data) {
         // create new submission
         const submission = await brandSubmissionService.insertBrandSubmission({
             user_id: id,
-            brand_name: name,
+            brand_name: brandName,
+            website: brandUrl,
         });
         return submission;
     } catch (err) {

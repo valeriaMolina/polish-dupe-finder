@@ -5,8 +5,8 @@
             <form
                 id="form-register"
                 class="border shadow rounded px-1 py-4"
-                novalidate
                 @submit.prevent="submit"
+                novalidate
             >
                 <div class="my-3 px-5 text-center">
                     <h2>Submit a new brand</h2>
@@ -59,8 +59,14 @@
                     <small>Provide the official website URL of the brand (if available)</small>
                 </div>
                 <div class="d-flex justify-content-center mx-2">
-                    <button id="button-submit" type="submit" class="btn mb-3 w-50">
-                        Submit Brand
+                    <button
+                        :disabled="isLoading"
+                        id="button-submit"
+                        type="submit"
+                        class="btn mb-3 w-50"
+                    >
+                        Submit
+                        <span class="spinner-border spinner-border-sm" :hidden="!isLoading"></span>
                     </button>
                 </div>
             </form>
@@ -72,6 +78,13 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import NotLoggedInModal from '@/components/modals/NotLoggedInModal.vue';
+import { submitBrand } from '@/apis/submissionsAPI';
+import * as yup from 'yup';
+
+let brandSub = yup.object({
+    brandName: yup.string().required('MissingBrandName'),
+    brandUrl: yup.string().required('MissingURL').url('InvalidURL'),
+});
 
 onMounted(() => {
     // check if there is a user logged in
@@ -83,7 +96,7 @@ onMounted(() => {
 });
 
 const authStore = useAuthStore();
-
+const isLoading = ref(false);
 let thisModal = ref(null);
 
 function showModal() {
@@ -92,7 +105,7 @@ function showModal() {
 
 const newBrand = reactive({
     brandName: ref(''),
-    brandUrl: ref(''),
+    brandUrl: ref(null),
 });
 
 const focus = (divId) => {
@@ -126,9 +139,20 @@ const blur = (divId) => {
 const submit = async () => {
     try {
         // validate that brandName is not empty
-        console.log('submitting...');
+        brandSub.validateSync(newBrand);
+        isLoading.value = true;
+        const res = await submitBrand(newBrand.brandName, newBrand.brandUrl);
+        isLoading.value = false;
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
+        isLoading.value = false;
+        // handle validation errors
+        if (error.message === 'MissingBrandName') {
+            blur('brand-name-div');
+        }
+        if (error.message === 'InvalidURL' || error.message === 'MissingURL') {
+            blur('brand-url-div');
+        }
     }
 };
 </script>
