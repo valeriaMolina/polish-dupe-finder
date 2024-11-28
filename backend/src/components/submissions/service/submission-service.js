@@ -187,30 +187,14 @@ async function submitBrand(data) {
         const brandExists = await brandService.findBrandNameInTable(brandName);
         if (brandExists) {
             logger.error(`Brand ${brandName} already exists in our records`);
-            throw new BrandAlreadyExistsError(
-                `Brand ${brandName} already exists in our records`
-            );
+            throw new BrandAlreadyExistsError('SubmissionAlreadyExists');
         }
         // check if there is already a submission for this brand
         const submissionExistsAlready =
             await brandSubmissionService.brandSubmissionExists(brandName);
         if (submissionExistsAlready) {
-            logger.error(`There is already a submission for this brand`);
-            if (submissionExistsAlready.user_id === id) {
-                logger.error(
-                    `User has already submitted this brand. Current Status: ${submissionExistsAlready.status}`
-                );
-                throw new UserAlreadySubmittedBrandError(
-                    `User has already submitted this brand. Current Status: ${submissionExistsAlready.status}`
-                );
-            } else {
-                logger.error(
-                    `Someone else already submitted this brand. Status: ${brandExists.status}`
-                );
-                throw new BrandAlreadySubmittedError(
-                    `Someone else already submitted this brand. Status: ${brandExists.status}`
-                );
-            }
+            logger.error(`Submission already exists for brand ${brandName}`);
+            throw new BrandAlreadySubmittedError('SubmissionDuplicate');
         }
         // create new submission
         const submission = await brandSubmissionService.insertBrandSubmission({

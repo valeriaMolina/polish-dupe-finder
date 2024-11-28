@@ -40,7 +40,13 @@ export async function submitBrand(brandName, brandUrl) {
         return response.data;
     } catch (error) {
         console.error(error);
-        throw error;
+        if (error.response.data.error === 'SubmissionDuplicate') {
+            throw new Error('SubmissionDuplicate');
+        } else if (error.response.data.error === 'SubmissionAlreadyExists') {
+            throw new Error('SubmissionAlreadyExists');
+        } else {
+            throw error;
+        }
     }
 }
 
