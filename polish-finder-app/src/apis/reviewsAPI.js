@@ -13,3 +13,13 @@ export async function reviewDupe(id, status) {
         throw error;
     }
 }
+
+export async function reviewBrand(id, status) {
+    try {
+        const response = await axiosInstance.put(`/update/brand?id=${id}&status=${status}`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

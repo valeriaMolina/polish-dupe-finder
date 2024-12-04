@@ -37,20 +37,28 @@ router.get(
     }
 );
 
-router.get('/brands', async (_, res) => {
-    try {
-        logger.info(`Received request to display dupe submissions`);
-        const submissions = await brandSubmissionService.getAllSubmissions();
-        return res.json(submissions);
-    } catch (error) {
-        if (error.statusCode) {
-            return res.status(error.statusCode).send({ error: error.message });
-        } else {
-            // error was not anticipated
-            logger.error(`Error not anticipated: ${error.message}`);
-            return res.status(500).send({ error: error.message });
+router.get(
+    '/brands',
+    authenticateToken,
+    authorize(permissions.MANAGE_BRAND_SUBMISSIONS),
+    async (_, res) => {
+        try {
+            logger.info(`Received request to display brand submissions`);
+            const submissions =
+                await brandSubmissionService.getAllSubmissions();
+            return res.json(submissions);
+        } catch (error) {
+            if (error.statusCode) {
+                return res
+                    .status(error.statusCode)
+                    .send({ error: error.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
         }
     }
-});
+);
 
 module.exports = router;

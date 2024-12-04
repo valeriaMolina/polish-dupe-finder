@@ -12,15 +12,25 @@
                 </div>
             </div>
         </div>
-        <div v-else class="row px-3 my-3"></div>
+        <div v-else class="row px-3 my-3">
+            <SubmissionListBrand
+                :submissions="brandSubmissions"
+                @update-list="refreshSubmissions()"
+            ></SubmissionListBrand>
+        </div>
     </div>
 </template>
 
 <script setup>
 import AdminNav from '@/components/admin-components/AdminNav.vue';
+import SubmissionListBrand from '@/components/admin-components/SubmissionListBrand.vue';
 import { getBrandSubmissions } from '@/apis/submissionsAPI';
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
+const authStore = useAuthStore();
+const router = useRouter();
 const isLoading = ref(true);
 const brandSubmissions = ref([]);
 
@@ -30,7 +40,18 @@ onMounted(async () => {
         brandSubmissions.value = submissions;
         isLoading.value = false;
     } catch (error) {
-        console.error(error);
+        if (error.message === 'MissingTokenError') {
+            // redirect to login page
+            authStore.clearSession();
+            router.push({ name: 'Home' });
+        }
     }
 });
+
+const refreshSubmissions = async () => {
+    isLoading.value = true;
+    const submissions = await getBrandSubmissions();
+    brandSubmissions.value = submissions;
+    isLoading.value = false;
+};
 </script>
