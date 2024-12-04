@@ -24,9 +24,13 @@
 <script setup>
 import AdminNav from '@/components/admin-components/AdminNav.vue';
 import SubmissionsListDupe from '@/components/admin-components/SubmissionsListDupe.vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 import { ref, onMounted } from 'vue';
 import { getDupeSubmissions } from '@/apis/submissionsAPI';
 
+const router = useRouter();
+const authStore = new useAuthStore();
 const isLoading = ref(true);
 const dupeSubmissions = ref([]);
 
@@ -38,7 +42,11 @@ onMounted(async () => {
             isLoading.value = false;
         }
     } catch (error) {
-        console.error(error);
+        if (error.message === 'MissingTokenError') {
+            // redirect to login page
+            authStore.clearSession();
+            router.push({ name: 'Home' });
+        }
     }
 });
 

@@ -62,3 +62,16 @@ export async function getDupeSubmissions() {
         throw error;
     }
 }
+
+/**
+ * This is a protected endpoint
+ * @returns
+ */
+export async function getBrandSubmissions() {
+    try {
+        const response = await axiosInstance.get('/submissions/brands');
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

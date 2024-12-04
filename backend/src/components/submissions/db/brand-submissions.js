@@ -23,13 +23,6 @@ const brandSubmissions = db.define(
             type: Sequelize.STRING(50),
             defaultValue: 'pending',
         },
-        user_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: users,
-                key: 'user_id',
-            },
-        },
         website: {
             type: Sequelize.TEXT,
         },
@@ -38,5 +31,8 @@ const brandSubmissions = db.define(
         timestamps: false,
     }
 );
+
+// create association with user fkey
+brandSubmissions.belongsTo(users, { foreignKey: 'user_id' });
 
 module.exports = brandSubmissions;

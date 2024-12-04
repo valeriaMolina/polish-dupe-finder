@@ -3,6 +3,7 @@
  */
 
 const brandSubmissionModel = require('../db/brand-submissions');
+const user = require('../../users/db/users');
 
 async function brandSubmissionExists(brandName) {
     const submission = await brandSubmissionModel.findOne({
@@ -29,7 +30,20 @@ async function updateBrandSubmissionStatus(brandSubmission, status) {
     return brandSubmission;
 }
 
+async function getAllSubmissions() {
+    const allSubmissions = await brandSubmissionModel.findAll({
+        include: [
+            {
+                model: user,
+                attributes: ['username'],
+            },
+        ],
+    });
+    return allSubmissions;
+}
+
 module.exports = {
+    getAllSubmissions,
     brandSubmissionExists,
     insertBrandSubmission,
     findSubmissionById,
