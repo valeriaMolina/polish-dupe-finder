@@ -26,7 +26,8 @@ axiosInstance.interceptors.response.use(
             if (
                 error.response.data.name === 'TokenExpiredError' ||
                 error.response.data.name === 'JsonWebTokenError' ||
-                error.response.data.name === 'Forbidden'
+                error.response.data.name === 'Forbidden' ||
+                error.response.data.name === 'MissingTokenError'
             ) {
                 originalRequest._retry = true;
                 console.log(`Retrying refreshing token`);
@@ -37,11 +38,10 @@ axiosInstance.interceptors.response.use(
                     // retry the original request
                     return axiosInstance(originalRequest);
                 } catch (error) {
+                    // if refreshing token fails, log out the user and redirect to login page
+                    console.error('Error refreshing token: ', error.message);
                     return Promise.reject(new Error('InvalidToken'));
                 }
-            }
-            if (error.response.data.name === 'MissingTokenError') {
-                return Promise.reject(new Error('MissingTokenError'));
             }
         }
         return Promise.reject(error);

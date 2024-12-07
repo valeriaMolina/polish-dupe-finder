@@ -41,7 +41,7 @@ async function checkIfSubmissionExists(polishId, similarToPolishId) {
             ],
         },
     });
-    return dupeExists ? dupeExists : null;
+    return dupeExists || null;
 }
 
 /**

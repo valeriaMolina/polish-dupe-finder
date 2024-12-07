@@ -63,7 +63,6 @@ router.post(
 
 /**
  * Handles requests from users to add polishes to db.
- * TODO: rework this route
  */
 router.post(
     '/polish',

@@ -67,12 +67,10 @@ exports.validateRefresh = [
                 });
             } else if (error.name === 'JsonWebTokenError') {
                 logger.error(`Invalid refresh token: ${error.message}`);
-                return res
-                    .status(403)
-                    .json({
-                        error: 'Forbidden: invalid refresh token',
-                        name: 'JsonWebTokenError',
-                    });
+                return res.status(403).json({
+                    error: 'Forbidden: invalid refresh token',
+                    name: 'JsonWebTokenError',
+                });
             } else {
                 logger.error(`Error verifying refresh token: ${error.message}`);
                 return res
@@ -114,7 +112,7 @@ exports.validateResetPassword = [
  */
 exports.decodeBasicAuth = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    if (!authHeader || !authHeader.startsWith('Basic ')) {
+    if (!authHeader?.startsWith('Basic ')) {
         return res
             .status(401)
             .json({ message: 'Missing or invalid Authorization header' });

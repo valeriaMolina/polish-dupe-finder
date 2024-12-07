@@ -4,7 +4,7 @@
             class="custom-input"
             type="text"
             v-model="inputValue"
-            placeholder="Search..."
+            :placeholder="props.placeholder"
             @input="onInput"
             @focus="showSuggestions = true"
             @blur="showSuggestions = false"
@@ -37,6 +37,11 @@ const props = defineProps({
     onSelect: {
         type: Function,
         required: true,
+    },
+    placeholder: {
+        type: String,
+        required: false,
+        default: 'Search...',
     },
 });
 

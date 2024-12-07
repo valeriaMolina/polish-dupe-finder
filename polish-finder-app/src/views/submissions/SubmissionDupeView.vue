@@ -118,10 +118,12 @@ import { useAuthStore } from '@/stores/auth';
 const router = useRouter();
 const authStore = useAuthStore();
 const brands = ref([]);
+
 // first polish
 const firstBrand = ref(null);
 const firstBrandPolishes = ref([]);
 const firstPolish = ref(null);
+
 // second polish
 const loading = ref(false);
 const secondBrand = ref(null);

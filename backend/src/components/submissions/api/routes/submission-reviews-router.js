@@ -1,6 +1,6 @@
 /**
  * @author  Valeria Molina Recinos
- * for mods to approve or reject user submissions
+ * This file contains the routes for updating submission statuses after human review.
  */
 
 const express = require('express');

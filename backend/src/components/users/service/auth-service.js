@@ -277,6 +277,7 @@ async function resendVerificationEmail(email) {
             newVerificationToken
         );
     } catch (error) {
+        logger.error(`Error sending verification email: ${error.message}`);
         throw error;
     }
 }
