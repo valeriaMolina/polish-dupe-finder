@@ -1,104 +1,4 @@
 <template>
-    <!-- <div id="main-div-polish-submit" class="d-flex flex-column align-items-center px-3 py-5">
-        <div class="header-area">
-            <h1>Submit a Nail Polish</h1>
-        </div>
-        <div id="form-register" class="border shadow rounded px-4 py-4">
-            <div class="submission-guidelines">
-                <h4>Submission Guidelines</h4>
-                <p>Before submitting a new nail polish, please make sure:</p>
-                <ul>
-                    <li>
-                        The polish is not already in our database. You can search for existing
-                        polishes
-                        <a href="">here</a>
-                        
-                    </li>
-                    <li>
-                        You provide as much information as possible to help us accurately add the
-                        polish
-                    </li>
-                </ul>
-            </div>
-            <div class="submit-polish-form">
-                <form action="" @submit.prevent="send">
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Polish Name</label>
-                        <small>Enter the full name of the nail polish</small>
-                        <input type="text" placeholder="name" required />
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Brand</label>
-                        <small
-                            >Select the brand from our list or <a href="">submit a new brand</a> if
-                            it's not listed</small
-                        >
-                        <select>
-                            <option>Please select a brand</option>
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                        </select>
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Type</label>
-                        <small>Select the type of polish (lacquer or gel)</small>
-                        <select name="" id="">
-                            <option value="">Select a type</option>
-                            <option value="">Lacquer</option>
-                            <option value="">Gel</option>
-                        </select>
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="Primary Color">Primary Color</label>
-                        <small
-                            >Select the main color of the polish.
-                            <a href="">What does this mean?</a></small
-                        >
-                        <select name="" id="">
-                            <option value="">Choose a primary color</option>
-                            <option value="">Red</option>
-                        </select>
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Effect Colors</label>
-                        <small>List any secondary colors (optional)</small>
-                        <select name="" id="">
-                            <option value="">Choose secondary colors</option>
-                        </select>
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Formulas</label>
-                        <small>List the formulas (e.g. glitter, creme, holographic).</small>
-                        <select name="" id="">
-                            Choose a formula
-                        </select>
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Description</label>
-                        <small>Tell us a little bit about the polish. What makes it unique?</small>
-                        <input type="text" placeholder="description" />
-                    </div>
-                    <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
-                        <label for="">Upload a picture</label>
-                        <small>Upload a clear picture of the polish</small>
-                        <input type="file" />
-                    </div>
-                    <div>
-                        <button
-                            id="override-btn"
-                            class="mx-2 btn-style501 btn"
-                            type="submit"
-                            :disabled="disable"
-                        >
-                            <span class="spinner-border spinner-border-sm" :hidden="hiddenSpinner">
-                            </span>
-                            Submit Polish
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> -->
     <div id="main-div-polish-submit" class="d-flex flex-column align-items-center px-3 py-5">
         <AlreadyInDB ref="alreadyInDb"></AlreadyInDB>
         <NotLoggedInModal ref="thisModal"></NotLoggedInModal>
@@ -144,38 +44,120 @@
                             @focus="focus('polish-name-div')"
                             @blur="blur('polish-name-div')"
                             required
+                            v-model="polish.polishName"
                         />
                         <small>Enter the full name of the polish</small>
                     </div>
                     <div class="d-flex flex-column mb-3 mx-2">
                         <small>Choose a brand</small>
                         <AutoCompletion
-                            v-if="!brandName"
+                            v-if="!polish.brandName"
                             :suggestions="brands"
                             :onSelect="selectBrand"
                             placeholder="Choose a brand"
                         ></AutoCompletion>
                         <Selection
-                            v-if="brandName"
-                            :text="brandName"
+                            v-if="polish.brandName"
+                            :text="polish.brandName"
                             @remove-selection-click="removeBrand"
                         ></Selection>
                     </div>
                     <div class="d-flex flex-column mb-3 mx-2">
-                        <select
-                            class="custom-input"
-                            id="polish-type"
-                            @focus="focus('polish-type-div')"
-                            @blur="blur('polish-type-div')"
-                        >
+                        <select class="custom-input" id="polish-type" v-model="polish.polishType">
                             <option value="">Select a type</option>
-                            <option value="lacquer">Lacquer</option>
-                            <option value="gel">Gel</option>
+                            <option value="Lacquer">Lacquer</option>
+                            <option value="Gel">Gel</option>
                         </select>
                         <small>Select the type of polish (lacquer or gel)</small>
                     </div>
                     <div class="d-flex flex-column mb-3 mx-2">
                         <small>Select a primary color</small>
+                        <AutoCompletion
+                            v-if="!polish.primaryColor"
+                            :suggestions="colors"
+                            :onSelect="selectPrimaryColors"
+                            placeholder="Choose a primary color"
+                        ></AutoCompletion>
+                        <Selection
+                            :color="getHexCode(polish.primaryColor)"
+                            v-if="polish.primaryColor"
+                            :text="polish.primaryColor.name"
+                            @remove-selection-click="removePrimaryColor"
+                        ></Selection>
+                    </div>
+
+                    <div class="d-flex flex-column mb-3 mx-2">
+                        <p>List any secondary colors (optional)</p>
+                        <div class="d-flex flex-row flex-wrap column-gap-1">
+                            <div v-for="color in polish.secondaryColors" :key="color.color_id">
+                                <Selection
+                                    :color="getHexCode(color)"
+                                    :text="color.name"
+                                    @remove-selection-click="removeEffectColor(color)"
+                                ></Selection>
+                            </div>
+                        </div>
+
+                        <AutoCompletion
+                            :suggestions="colors"
+                            placeholder="Select effect colors"
+                            :onSelect="addEffectColor"
+                        ></AutoCompletion>
+                    </div>
+                    <div class="d-flex flex-column mb-3 mx-2">
+                        <p>Choose a formula</p>
+                        <div class="d-flex flex-row flex-wrap column-gap-1">
+                            <div
+                                v-for="formula in polish.selectedFormulas"
+                                :key="formula.formula_id"
+                            >
+                                <Selection
+                                    :text="formula.name"
+                                    @remove-selection-click="removeFormula(formula)"
+                                ></Selection>
+                            </div>
+                        </div>
+                        <AutoCompletion
+                            placeholder="Enter formula name"
+                            :suggestions="formulas"
+                            :onSelect="addFormula"
+                        ></AutoCompletion>
+                        <small>At least one formula must be chosen</small>
+                    </div>
+                    <div id="description-div" class="d-flex flex-column mb-3 mx-2">
+                        <label id="description-label" for="" class="form-label form-label-size"
+                            >Write a description
+                        </label>
+                        <input
+                            type="text"
+                            class="custom-input"
+                            @focus="focus('description-div')"
+                            @blur="blur('description-div')"
+                            v-model="polish.description"
+                        />
+                        <small>Tell us more! (Optional)</small>
+                    </div>
+                    <div class="d-flex flex-column mb-3 mx-2">
+                        <b>Upload a clear picture</b>
+                        <input type="file" class="custom-input" @change="handleFileChange" />
+                        <small
+                            >By uploading a picture, you are giving us permission to store it in our
+                            database.</small
+                        >
+                        <div v-if="fileError" class="alert alert-danger" role="alert">
+                            {{ fileError }}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row mb-3 mx-2 column-gap-1">
+                        <button class="btn btn-success" @click.prevent="send()">
+                            Submit
+                            <span class="spinner-border spinner-border-sm" :hidden="hiddenSpinner">
+                            </span>
+                        </button>
+                        <button class="btn btn-secondary">Clear</button>
+                    </div>
+                    <div class="alert alert-danger" role="alert" :hidden="!showErrorMessage">
+                        {{ errorMessage }}
                     </div>
                 </form>
             </div>
@@ -194,16 +176,78 @@ import ErrorModal from '@/components/modals/ErrorModal.vue';
 
 import { useAuthStore } from '@/stores/auth';
 import { fetchBrands } from '@/apis/brandAPI';
+import * as yup from 'yup';
+import { ref, onMounted, computed, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { fetchAllColors, fetchAllFormulas } from '@/apis/polishAPI';
+import { submitPolish } from '@/apis/submissionsAPI';
+import { formatPolishSubmission } from '@/utils/format';
 
-import { ref, onMounted } from 'vue';
-
+const router = useRouter();
 const authStore = useAuthStore();
-const disable = ref(false);
 const hiddenSpinner = ref(true);
-const brands = ref([]);
 
-// input fields
-const brandName = ref('');
+const brands = ref([]);
+const colors = ref([]);
+const formulas = ref([]);
+
+// modal definitions
+const thisModal = ref(null);
+const errorModal = ref(null);
+const successModal = ref(null);
+
+// error messages
+const errorMessage = ref('');
+const showErrorMessage = ref(false);
+
+const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+const schema = yup.object({
+    polishName: yup.string().required('Name of the polish is required'),
+    brandName: yup.string().required('Brand is required'),
+    polishType: yup.string().required('Type of polish is required'),
+    primaryColor: yup.object().required('Primary color is required'),
+    secondaryColors: yup.array(),
+    selectedFormulas: yup.array().min(1, 'At least one formula is required'),
+    description: yup.string(),
+    image: yup.mixed().required('Image is required'),
+});
+
+const polish = reactive({
+    polishName: '',
+    brandName: '',
+    polishType: '',
+    primaryColor: null,
+    secondaryColors: [],
+    selectedFormulas: [],
+    description: '',
+    image: null,
+});
+
+/**
+ * Clear the polish object
+ */
+const clearPolish = () => {
+    polish.polishName = '';
+    polish.brandName = '';
+    polish.polishType = '';
+    polish.primaryColor = null;
+    polish.secondaryColors = [];
+    polish.selectedFormulas = [];
+    polish.description = '';
+    polish.image = null;
+};
+
+// holds the message if there is an error with the file uploaded
+const fileError = ref(null);
+
+const getHexCode = (primaryColor) => {
+    if (primaryColor.hex_code) {
+        return primaryColor.hex_code;
+    } else {
+        return '#000000'; // default to black if no hex_code is provided
+    }
+};
 
 onMounted(async () => {
     // check if user is logged in
@@ -211,15 +255,42 @@ onMounted(async () => {
         showModal();
     } else {
         // fetch brands from API
-        const fetchedBrands = await fetchBrands();
-        brands.value = fetchedBrands;
+        try {
+            const fetchedBrands = await fetchBrands();
+            brands.value = fetchedBrands;
+            colors.value = await fetchAllColors();
+            formulas.value = await fetchAllFormulas();
+        } catch (error) {
+            console.error(error);
+            displayErrorModal();
+        }
     }
 });
 
 const send = async () => {
-    console.log('Submitting...');
-    disable.value = true;
-    hiddenSpinner.value = false;
+    try {
+        schema.validateSync(polish);
+        errorMessage.value = '';
+        showErrorMessage.value = false;
+        hiddenSpinner.value = false;
+        const req = formatPolishSubmission(polish);
+        const res = await submitPolish(req);
+        if (res) {
+            hiddenSpinner.value = true;
+            clearPolish();
+            reset('polish-name-div');
+            reset('description-div');
+            displaySuccessModal();
+        }
+    } catch (error) {
+        if (error.message === 'InvalidTokenError') {
+            authStore.clearSessionData();
+            router.push('/login');
+        }
+        errorMessage.value = error.message;
+        showErrorMessage.value = true;
+        hiddenSpinner.value = true;
+    }
 };
 
 const focus = (divId) => {
@@ -280,11 +351,47 @@ function displayAlreadyExistsInDbModal() {
 }
 
 const selectBrand = async (brand) => {
-    brandName.value = brand.name;
+    polish.brandName = brand.name;
 };
 
 const removeBrand = () => {
-    brandName.value = null;
+    polish.brandName = null;
+};
+
+const selectPrimaryColors = async (color) => {
+    polish.primaryColor = color;
+};
+
+const removePrimaryColor = () => {
+    polish.primaryColor = null;
+};
+
+const addEffectColor = async (color) => {
+    polish.secondaryColors.push(color);
+};
+
+const removeEffectColor = async (color) => {
+    polish.secondaryColors = polish.secondaryColors.filter((c) => c !== color);
+};
+
+const addFormula = async (formula) => {
+    polish.selectedFormulas.push(formula);
+};
+
+const removeFormula = async (formula) => {
+    polish.selectedFormulas = polish.selectedFormulas.filter((f) => f !== formula);
+};
+
+const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+        fileError.value = 'Invalid file type. Please upload an image file (jpg, jpeg, png, gif)';
+        polish.image = null;
+    } else {
+        fileError.value = null;
+        polish.image = selectedFile;
+    }
 };
 </script>
 

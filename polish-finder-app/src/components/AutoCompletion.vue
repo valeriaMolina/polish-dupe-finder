@@ -47,7 +47,9 @@ const props = defineProps({
 
 const selectSuggestion = (suggestion) => {
     inputValue.value = suggestion.name;
-    showSuggestions.value = false;
+    showSuggestions.value = true;
+    matches.value = [];
+    inputValue.value = '';
     props.onSelect(suggestion);
 };
 

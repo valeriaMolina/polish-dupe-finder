@@ -55,8 +55,11 @@ exports.validateRefresh = [
         }
         try {
             const refreshToken = req.cookies.refreshToken;
+            logger.info(`Verifying refresh token`);
             // verify the refresh token
             jwt.verify(refreshToken, config.refreshTokenSecret);
+            logger.info('Refresh token verified');
+            req.cookies.oldRefreshToken = refreshToken;
             next();
         } catch (error) {
             if (error.name === 'TokenExpiredError') {

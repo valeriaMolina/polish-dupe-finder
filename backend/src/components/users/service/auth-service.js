@@ -28,8 +28,10 @@ async function invalidateRefreshToken(refreshToken) {
     const user = await userService.getUserByRefreshToken(refreshToken);
 
     if (!user) {
-        logger.error(`Invalid refresh token`);
-        throw new UserNotFoundError('Invalid refresh token');
+        logger.error(`No user had this refresh token`);
+        throw new UserNotFoundError(
+            'No user associated with this refresh token'
+        );
     }
 
     // remove refresh token from database
@@ -425,7 +427,7 @@ async function refreshTokens(refreshToken) {
         // generate new tokens
         const payload = {
             user: {
-                id: user.user_id,
+                id: userId,
             },
         };
         const newAccessToken = jwt.sign(payload, config.jwtSecret, {
@@ -439,6 +441,7 @@ async function refreshTokens(refreshToken) {
 
         return { accessToken: newAccessToken, refreshToken: newRefreshToken };
     } catch (error) {
+        logger.error(`Error refreshing tokens: ${error.message}`);
         throw new InvalidTokenError('Invalid refresh token');
     }
 }

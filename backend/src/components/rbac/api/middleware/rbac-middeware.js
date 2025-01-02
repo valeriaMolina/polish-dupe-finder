@@ -24,8 +24,9 @@ const logger = require('../../../../libraries/logger/logger');
  */
 const authenticateToken = (req, res, next) => {
     logger.info(`Authenticating token`);
-    const token = accessToken;
+    const token = req.cookies.accessToken;
     if (!token) {
+        logger.info('No token provided');
         return res
             .status(401)
             .json({ error: 'No token provided', name: 'MissingTokenError' });
@@ -96,10 +97,12 @@ function authorize(permissionName) {
                 const roleId = userRole.role_id;
                 // get the role's permissions
                 const rolesList =
-                    await rolesPermissionsService.findRolesByRoleId(roleId);
+                    await rolesPermissionsService.findPermissionsByRoleId(
+                        roleId
+                    );
                 // check if the role has the required permission
                 const usrRoleArray = rolesList.filter(
-                    (role) => role.permission_name === permissionName
+                    (role) => role.permission.name === permissionName
                 );
                 // if the user has the required permission, proceed to the next middleware
                 if (usrRoleArray.length > 0) {

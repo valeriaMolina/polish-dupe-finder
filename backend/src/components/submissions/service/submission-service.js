@@ -14,14 +14,15 @@ const {
     UserAlreadySubmittedPolishError,
     PolishAlreadySubmittedError,
     BrandAlreadyExistsError,
-    UserAlreadySubmittedBrandError,
     BrandAlreadySubmittedError,
     BrandSubmissionError,
     PolishSubmissionError,
+    UnableToUpdateSubmissionError,
 } = require('../../../libraries/utils/error-handler');
 const logger = require('../../../libraries/logger/logger');
 const polishService = require('../../polish/service/polish-service');
 const brandService = require('../../brands/service/brand-service');
+const uploadService = require('../../../libraries/config/file-upload');
 const { submissionExists } = require('../service/polish-submission-service');
 
 /**
@@ -156,10 +157,33 @@ async function submitPolish(data) {
         // create new submission
         const newSubmission =
             await polishSubmissionService.insertNewPolishSubmission(submission);
+
         return newSubmission;
     } catch (err) {
         logger.error(`Error while submitting polish: ${err.message}`);
         throw new PolishSubmissionError(err.message);
+    }
+}
+
+/**
+ * Updates a polish submission of the specified submission id with a url to an image
+ * @param {*} submissionId
+ * @param {*} imageUrl
+ * @returns the updated submission
+ */
+async function addImageUrlToPolishSubmissions(submissionId, imageUrl) {
+    try {
+        const updatedSub =
+            await polishSubmissionService.addImageUrlToPolishSubmissions(
+                submissionId,
+                imageUrl
+            );
+        logger.info(
+            `Image URL '${imageUrl}' added to submission '${submissionId}'`
+        );
+        return updatedSub;
+    } catch (err) {
+        throw new UnableToUpdateSubmissionError(err.message);
     }
 }
 
@@ -213,4 +237,5 @@ module.exports = {
     submitDupe,
     submitPolish,
     submitBrand,
+    addImageUrlToPolishSubmissions,
 };

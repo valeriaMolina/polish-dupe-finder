@@ -3,11 +3,13 @@
  */
 
 const { check, query, validationResult, body } = require('express-validator');
+const polishSubmissionService = require('../../service/polish-submission-service');
 const brandService = require('../../../brands/service/brand-service');
 const typeService = require('../../../polish/service/type-service');
 const colorService = require('../../../polish/service/color-service');
 const formulaService = require('../../../polish/service/formula-service');
 const polishService = require('../../../polish/service/polish-service');
+const { upload } = require('../../../../libraries/config/file-upload');
 const status = require('../../../../libraries/constants/status');
 const logger = require('../../../../libraries/logger/logger');
 
@@ -30,6 +32,38 @@ exports.validatePolishSubmission = [
         next();
     },
 ];
+
+exports.validateFileUpload = async (req, res, next) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
+        }
+        // check for the submission id
+        if (!req.body.submissionId) {
+            return res
+                .status(400)
+                .json({ message: 'Submission ID is required' });
+        }
+        const submissionId = parseInt(req.body.submissionId);
+        // check that the submission exists
+        const submission =
+            await polishSubmissionService.findSubmissionById(submissionId);
+        if (!submission) {
+            return res.status(404).json({ message: 'Submission not found' });
+        }
+        if (submission.status !== 'pending') {
+            return res.status(400).json({
+                message: 'Submission has already been processed',
+            });
+        }
+        if (submission.image_url) {
+            return res.status(400).json({
+                message: 'Image URL has already been added',
+            });
+        }
+        next();
+    });
+};
 
 /**
  * Middleware function to validate the brand submission data.
@@ -118,7 +152,9 @@ exports.formatPolishSubmission = async (req, res, next) => {
             error: err,
         });
     });
-    submission.effect_color_ids = effectColorIds.map((color) => color.color_id);
+    submission.effect_colors_ids = effectColorIds.map(
+        (color) => color.color_id
+    );
     // get the formula ids
     const formulaIds = await Promise.all(
         formulas.map((formula) => formulaService.findFormulaByName(formula))

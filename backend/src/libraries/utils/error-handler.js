@@ -333,6 +333,22 @@ class InvalidFilterColorError extends Error {
     }
 }
 
+class FileNotSupportedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'FileNotSupportedError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class UnableToUpdateSubmissionError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UnableToUpdateSubmissionError';
+        this.statusCode = 500; // bad request
+    }
+}
+
 module.exports = {
     BrandNotFoundError,
     BrandAlreadyExistsError,
@@ -375,4 +391,6 @@ module.exports = {
     InvalidFilterBrandNameError,
     InvalidFilterTypeError,
     InvalidFilterColorError,
+    FileNotSupportedError,
+    UnableToUpdateSubmissionError,
 };

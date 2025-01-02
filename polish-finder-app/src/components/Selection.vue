@@ -1,6 +1,6 @@
 <template>
     <h5>
-        <span class="badge text-bg-secondary"
+        <span :style="{ backgroundColor: color }" class="badge"
             >{{ text }} <button @click.prevent="handleClick"><i class="bi bi-x"></i></button
         ></span>
     </h5>
@@ -11,6 +11,11 @@ const props = defineProps({
     text: {
         type: String,
         required: true,
+    },
+    color: {
+        type: String,
+        default: '#000000',
+        required: false,
     },
 });
 

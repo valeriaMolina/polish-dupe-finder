@@ -56,7 +56,7 @@ export const useAuthStore = defineStore('auth', {
                 throw error;
             }
         },
-        clearSession() {
+        clearSessionData() {
             this.isLoggedIn = false;
             this.user = null;
             this.isUserVerified = false;

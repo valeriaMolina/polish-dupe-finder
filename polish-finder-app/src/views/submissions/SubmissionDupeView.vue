@@ -223,12 +223,16 @@ const selectSecondPolish = (polish) => {
 
 onMounted(async () => {
     // a user must be logged in
-    if (!authStore.getIsLoggedIn) {
-        showModal();
-    } else {
-        // fetch all brands from the API and populate the brands array
-        const fetchedBrands = await fetchBrands();
-        brands.value = fetchedBrands;
+    try {
+        if (!authStore.getIsLoggedIn) {
+            showModal();
+        } else {
+            // fetch all brands from the API and populate the brands array
+            const fetchedBrands = await fetchBrands();
+            brands.value = fetchedBrands;
+        }
+    } catch (error) {
+        console.error(error);
     }
 });
 </script>

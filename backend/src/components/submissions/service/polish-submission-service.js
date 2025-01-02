@@ -10,6 +10,13 @@ async function insertNewPolishSubmission(attributes) {
     return newSubmission;
 }
 
+async function addImageUrlToPolishSubmissions(submissionId, imageUrl) {
+    const submission = await findSubmissionById(submissionId);
+    submission.image_url = imageUrl;
+    await submission.save();
+    return submission;
+}
+
 async function submissionExists(brandId, name) {
     const submissionExists = await polishSubmissionsModel.findOne({
         where: {
@@ -40,4 +47,5 @@ module.exports = {
     submissionExists,
     findSubmissionById,
     updatePolishSubmissionStatus,
+    addImageUrlToPolishSubmissions,
 };

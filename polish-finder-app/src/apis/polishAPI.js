@@ -57,3 +57,27 @@ export async function getPolishesByBrandId(brandId, page, limit) {
         throw error;
     }
 }
+
+/**
+ * Fetch all the colors in the database
+ * @returns {Promise<Array<Object>} - A promise that resolves to an object containing the fetched brands.
+ */
+export async function fetchAllColors() {
+    try {
+        const request = await axios.get(`${SERVER}/colors/all`);
+        return request.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function fetchAllFormulas() {
+    try {
+        const request = await axios.get(`${SERVER}/formulas/all`);
+        return request.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

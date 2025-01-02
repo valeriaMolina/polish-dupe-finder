@@ -50,6 +50,17 @@ export async function submitBrand(brandName, brandUrl) {
     }
 }
 
+export async function submitPolish(body) {
+    try {
+        console.log(body);
+        const response = await axiosInstance.post('/submit/polish', body);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 /**
  * This is a protected endpoint
  * @returns
