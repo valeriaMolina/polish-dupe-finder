@@ -154,7 +154,9 @@
                             <span class="spinner-border spinner-border-sm" :hidden="hiddenSpinner">
                             </span>
                         </button>
-                        <button class="btn btn-secondary">Clear</button>
+                        <button class="btn btn-secondary" @click.prevent="clearPolish()">
+                            Clear
+                        </button>
                     </div>
                     <div class="alert alert-danger" role="alert" :hidden="!showErrorMessage">
                         {{ errorMessage }}
@@ -180,7 +182,7 @@ import * as yup from 'yup';
 import { ref, onMounted, computed, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { fetchAllColors, fetchAllFormulas } from '@/apis/polishAPI';
-import { submitPolish } from '@/apis/submissionsAPI';
+import { submitPolish, submitPolishImage } from '@/apis/submissionsAPI';
 import { formatPolishSubmission } from '@/utils/format';
 
 const router = useRouter();
@@ -236,6 +238,12 @@ const clearPolish = () => {
     polish.selectedFormulas = [];
     polish.description = '';
     polish.image = null;
+    // clear the file input
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) {
+        fileInput.value = '';
+    }
+    reset('polish-name-div');
 };
 
 // holds the message if there is an error with the file uploaded
@@ -276,6 +284,10 @@ const send = async () => {
         const req = formatPolishSubmission(polish);
         const res = await submitPolish(req);
         if (res) {
+            console.log(res);
+            const submissionId = res.submission_id;
+            // upload the file as well
+            await submitPolishImage(polish.image, submissionId);
             hiddenSpinner.value = true;
             clearPolish();
             reset('polish-name-div');

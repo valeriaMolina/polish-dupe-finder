@@ -61,6 +61,22 @@ export async function submitPolish(body) {
     }
 }
 
+export async function submitPolishImage(file, submissionId) {
+    try {
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('submissionId', submissionId);
+        const response = await axiosInstance.put('/submit/polish-image', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log(response);
+    } catch (error) {
+        throw new Error('UploadImageFailed');
+    }
+}
+
 /**
  * This is a protected endpoint
  * @returns
