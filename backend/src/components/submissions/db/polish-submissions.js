@@ -7,6 +7,7 @@ const db = require('../../../libraries/db/database');
 const brand = require('../../brands/db/brands');
 const types = require('../../polish/db/types');
 const color = require('../../polish/db/colors');
+const users = require('../../users/db/users');
 
 const polishSubmissions = db.define(
     'polish_submissions',
@@ -76,5 +77,11 @@ const polishSubmissions = db.define(
         timestamps: false,
     }
 );
+
+// create fkey associations
+polishSubmissions.belongsTo(users, { foreignKey: 'user_id' });
+polishSubmissions.belongsTo(brand, { foreignKey: 'brand_id' });
+polishSubmissions.belongsTo(types, { foreignKey: 'type_id' });
+polishSubmissions.belongsTo(color, { foreignKey: 'primary_color_id' });
 
 module.exports = polishSubmissions;

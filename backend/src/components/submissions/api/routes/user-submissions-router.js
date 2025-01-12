@@ -123,29 +123,35 @@ router.post(
  * Handles the request for uploading an image to the
  * polish submission
  */
-router.put('/polish-image', validateFileUpload, async (req, res) => {
-    try {
-        const asset = await fileUpload.uploadToCloud(req.file.buffer);
-        const url = await fileUpload.getAssetUrl(asset.public_id);
-        // add the url to the submission in the db
-        const submission = await addImageUrlToPolishSubmissions(
-            req.body.submissionId,
-            url
-        );
-        res.status(200).send({ submission });
-    } catch (error) {
-        if (error.statusCode) {
-            res.status(error.statusCode).send({
-                message: error.message,
-                name: error.name,
-            });
-        } else {
-            res.status(500).send({
-                message: error.message,
-                name: 'Error not anticipated',
-            });
+router.put(
+    '/polish-image',
+    authenticateToken,
+    authorize(permissions.UPLOAD_POLISH),
+    validateFileUpload,
+    async (req, res) => {
+        try {
+            const asset = await fileUpload.uploadToCloud(req.file.buffer);
+            const url = await fileUpload.getAssetUrl(asset.public_id);
+            // add the url to the submission in the db
+            const submission = await addImageUrlToPolishSubmissions(
+                req.body.submissionId,
+                url
+            );
+            res.status(200).send({ submission });
+        } catch (error) {
+            if (error.statusCode) {
+                res.status(error.statusCode).send({
+                    message: error.message,
+                    name: error.name,
+                });
+            } else {
+                res.status(500).send({
+                    message: error.message,
+                    name: 'Error not anticipated',
+                });
+            }
         }
     }
-});
+);
 
 module.exports = router;

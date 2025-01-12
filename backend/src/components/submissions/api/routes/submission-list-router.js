@@ -7,6 +7,7 @@ const router = express.Router();
 const logger = require('../../../../libraries/logger/logger');
 const dupeSubmissionService = require('../../service/dupe-submission-service');
 const brandSubmissionService = require('../../service/brand-submission-service');
+const polishSubmissionService = require('../../service/polish-submission-service');
 const {
     authenticateToken,
     authorize,
@@ -56,6 +57,33 @@ router.get(
                 // error was not anticipated
                 logger.error(`Error not anticipated: ${error.message}`);
                 return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
+
+router.get(
+    '/polish',
+    authenticateToken,
+    authorize(permissions.MANAGE_SUBMISSIONS),
+    async (_, res) => {
+        try {
+            logger.info(`Received request to display polish submissions`);
+            const submissions =
+                await polishSubmissionService.getAllPolishSubmissions();
+            return res.json(submissions);
+        } catch (error) {
+            if (error.statusCode) {
+                return res
+                    .status(error.statusCode)
+                    .send({ error: error.message, name: error.name });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({
+                    error: error.message,
+                    name: 'ErrorNotAnticipated',
+                });
             }
         }
     }

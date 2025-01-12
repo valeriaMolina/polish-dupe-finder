@@ -102,3 +102,12 @@ export async function getBrandSubmissions() {
         throw error;
     }
 }
+
+export async function getPolishSubmissions() {
+    try {
+        const response = await axiosInstance.get('/submissions/polish');
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
